@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Informações</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body class="fundo img_fundo_1">
+    <header class="cabecalho d-flex">
+        <div>
+            <img class="logo" src="../static/img/logo.png">
+        </div>
+        <div class="d-flex caminhos">
+            <a href="/"><p class="caminho">Home</p></a>
+            <div class="divisao"></div>
+            <a href="/nova_receita"><p class="caminho">Receitas</p></a>
+            <div class="divisao"></div>
+            <a href="/nova_despesa"><p class="caminho">Despesas</p></a>
+        </div>
+
+        <div>
+            <a href="/login"><img class="usuario" src="../static/img/usuario.png"></a>
+        </div>
+    </header>
+
+    <div class="espaco"></div>
+
+    <section class="">
+
+        <div class="adicionar">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="mini-espaco"></div>
+            <p class="texto_quadro">EDITAR INFORMAÇÕES</p>
+            <div class="mini-espaco"></div>
+            <form action="{{ url_for('editar_usuario') }}" method="post">
+                <label class="info" for="nome">Nome:</label>
+                <input type="text" class="inputo1" id="nome" name="nome" placeholder="Seu nome completo" value="{{user[1]}}" required> <br>
+
+                <div class="mini-espaco"></div>
+
+                <label class="info" for="nascimento">Data de nascimento:</label>
+                <input type="date" class="inputo2" id="nascimento" name="nascimento" value="{{user[3]}}" required> <br>
+
+                <div class="mini-espaco"></div>
+
+                <label class="info" for="cpf">CPF:</label>
+                <input type="text" class="inputo2" id="cpf" name="cpf" value="{{user[2]}}" required> <br>
+
+                <div class="mini-espaco"></div>
+
+                <label class="info" for="email">Email:</label>
+                <input type="email" class="inputo3" id="email" name="email" value="{{user[4]}}" required> <br>
+
+                <div class="mini-espaco"></div>
+
+                <label class="info" for="senha">Senha:</label>
+                <input type="password" class="inputo2" id="senha" name="senha" placeholder="Sua nova senha aqui" required> <br>
+
+                <div class="mini-espaco"></div>
+
+
+                <label class="info" for="senhaAntiga">Senha Atual:</label>
+                <input type="password" class="inputo3" id="senhaAntiga" name="senhaAntiga" placeholder="Sua senha atual aqui" required> <br>
+
+                <div class="mini-espaco"></div>
+
+                <button type="submit" class="botao">Salvar</button>
+            </form>
+        </div>
+    </section>
+
+
+    <footer class="rodape">
+
+    </footer>
+</body>
+</html>
