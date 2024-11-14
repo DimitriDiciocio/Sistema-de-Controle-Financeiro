@@ -13,7 +13,7 @@ database = os.path.join(pasta_atual, 'banco.fdb')
 print(database)
 
 user = 'SYSDBA'
-password = 'masterkey'
+password = 'sysdba'
 
 con = fdb.connect(host=host, database=database, user=user, password=password)
 
