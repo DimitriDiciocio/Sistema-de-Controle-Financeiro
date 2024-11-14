@@ -29,29 +29,35 @@ class Users:
 
 
 class Despesas:
-    def __init__(self, id_despesa, motivo, valor, data_despesa):
+    def __init__(self, id_despesa, motivo, valor, data_despesa, id_user):
         self.id_despesa = id_despesa
         self.motivo = motivo
         self.valor = valor
         self.data_despesas = data_despesa
+        self.id_user = id_user
 
 
 class Receitas:
-    def __init__(self, id_receita, motivo, valor, data_receita):
+    def __init__(self, id_receita, motivo, valor, data_receita, id_user):
         self.id_receita = id_receita
         self.motivo = motivo
         self.valor = valor
         self.data_receitas = data_receita
+        self.id_user = id_user
 
 
-@app.route('/')
+@app.route('/home', methods=['GET'])
 def index():
+
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
     cursor = con.cursor()
     cursor.execute('SELECT ID_USER, NOME FROM USERS')
     users = cursor.fetchall()
-    cursor.execute('SELECT ID_RECEITA, MOTIVO, VALOR, DATA_RECEITA FROM RECEITAS')
+    cursor.execute('SELECT ID_RECEITA, MOTIVO, VALOR, DATA_RECEITA FROM RECEITAS where id_user = ?', (id_user,))
     receitas = cursor.fetchall()
-    cursor.execute('SELECT ID_DESPESA, MOTIVO, VALOR, DATA_DESPESA FROM DESPESAS')
+    cursor.execute('SELECT ID_DESPESA, MOTIVO, VALOR, DATA_DESPESA FROM DESPESAS where id_user = ?', (id_user,))
     despesas = cursor.fetchall()
     cursor.close()
     total = 0
@@ -59,6 +65,8 @@ def index():
         total += receita[2]
     for despesa in despesas:
         total -= despesa[2]
+
+
 
     return render_template('home.html', users=users, receitas=receitas, despesas=despesas, total=total)
 
@@ -106,7 +114,7 @@ def cadastrar():
     return redirect('/')
 
 
-@app.route('/login')
+@app.route('/')
 def login():
     return render_template('login.html')
 
@@ -127,6 +135,9 @@ def logar():
         else:
             session['email'] = email
             session['senha'] = senha
+            cursor.execute("SELECT id_user FROM users WHERE email = ? AND senha = ?", (email, senha))
+            id_user = cursor.fetchone()[0]
+            session['id_user'] = id_user
 
     except Exception as e:
         flash(f"Erro ao logar: {e}", "error")
@@ -135,11 +146,13 @@ def logar():
 
     cursor.close()
     flash("Usuário entrou com sucesso!", "success")
-    return redirect('/perfil')
+    return redirect('/home')
 
 
 @app.route('/perfil', methods=['GET'])
 def perfil():
+    if session.get('id_user') == '':
+        return redirect('/')
     email = session.get('email')
 
     cursor = con.cursor()
@@ -156,6 +169,8 @@ def perfil():
 
 @app.route('/editar_usuario', methods=['POST', 'GET'])
 def editar_usuario():
+    if session.get('id_user') == '':
+        return redirect('/')
     email = session.get('email')
     senhaCorreta = session.get('senha')
 
@@ -189,7 +204,7 @@ def editar_usuario():
 
             cursor.close()
             flash("Usuário atualizado com sucesso!", "success")
-            return redirect('/')
+            return redirect('/home')
         else:
             flash("Senha Incorreta", "error")
             if cursor:
@@ -201,66 +216,81 @@ def editar_usuario():
     return render_template('editar_usuario.html', user=user)
 
 
-@app.route('/criar_receita', methods=['POST'])
+@app.route('/criar_receita', methods=['POST', 'GET'])
 def criar_receita():
+    if session.get('id_user') == '':
+        return redirect('/')
     motivo = request.form['motivo_receita']
     valor = request.form['valor_receita']
     data_receita = request.form['data_receita']
+    id_user = session.get('id_user')
 
     cursor = con.cursor()
 
     try:
-        cursor.execute("INSERT INTO receitas (motivo, valor, data_receita) VALUES (?, ?, ?)",
-                       (motivo, valor, data_receita))
+        cursor.execute("INSERT INTO receitas (motivo, valor, data_receita, id_user) VALUES (?, ?, ?, ?)",
+                       (motivo, valor, data_receita, id_user))
         con.commit()
     finally:
         cursor.close()
 
     flash("Receita cadastrada com sucesso!", "success")
-    return redirect('/')
+    return redirect('/home')
 
 
-@app.route('/criar_despesa', methods=['POST'])
+@app.route('/criar_despesa', methods=['POST', 'GET'])
 def criar_despesa():
+    if session.get('id_user') == '':
+        return redirect('/')
     motivo = request.form['motivo_despesa']
     valor = request.form['valor_despesa']
     data_despesa = request.form['data_despesa']
+    id_user = session.get('id_user')
 
     cursor = con.cursor()
 
     try:
-        cursor.execute("INSERT INTO despesas (motivo, valor, data_despesa) VALUES (?, ?, ?)",
-                       (motivo, valor, data_despesa))
+        cursor.execute("INSERT INTO despesas (motivo, valor, data_despesa, id_user) VALUES (?, ?, ?, ?)",
+                       (motivo, valor, data_despesa, id_user))
         con.commit()
     finally:
         cursor.close()
 
-    flash("Receita cadastrada com sucesso!", "success")
-    return redirect('/')
+    flash("Despesa cadastrada com sucesso!", "success")
+    return redirect('/home')
 
 
-@app.route('/nova_receita')
+@app.route('/nova_receita', methods=['GET'])
 def nova_receita():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
     cursor = con.cursor()
-    cursor.execute("select id_receita, motivo, valor, data_receita from receitas")
+    cursor.execute("select id_receita, motivo, valor, data_receita from receitas where id_user = ?", (id_user,))
     receitas = cursor.fetchall()
     cursor.close()
     return render_template('nova_receita.html', receitas=receitas)
 
 
-@app.route('/nova_despesa')
+@app.route('/nova_despesa', methods=['GET'])
 def nova_despesa():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
     cursor = con.cursor()
-    cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas")
+    cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas where id_user = ?", (id_user,))
     despesas = cursor.fetchall()
     cursor.close()
     return render_template('nova_despesa.html', despesas=despesas)
 
 
-@app.route('/atualizar_receita')
+@app.route('/atualizar_receita', methods=['GET'])
 def atualizar_receita():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
     cursor = con.cursor()
-    cursor.execute("select id_receita, motivo, valor, data_receita from receitas")
+    cursor.execute("select id_receita, motivo, valor, data_receita from receitas where id_user = ?", (id_user,))
     receitas = cursor.fetchall()
     cursor.close()
     return render_template('editar_receita.html', receitas=receitas)
@@ -268,8 +298,11 @@ def atualizar_receita():
 
 @app.route('/atualizar_despesa')
 def atualizar_despesa():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
     cursor = con.cursor()
-    cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas")
+    cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas where id_user = ?", (id_user,))
     despesas = cursor.fetchall()
     cursor.close()
     return render_template('editar_despesa.html', despesas=despesas)
@@ -277,15 +310,17 @@ def atualizar_despesa():
 
 @app.route('/editar_receita/<int:id>', methods=['GET', 'POST'])
 def editar_receita(id):
+    if session.get('id_user') == '':
+        return redirect('/')
     cursor = con.cursor()
-
+    id_user = session.get('id_user')
     cursor.execute("SELECT ID_RECEITA, MOTIVO, VALOR, DATA_RECEITA FROM RECEITAS WHERE ID_RECEITA = ?", (id,))
     receita = cursor.fetchone()
 
     if not receita:
         cursor.close()
         flash("Receita não encontrada!", "error")
-        return redirect('/')
+        return redirect('/home')
 
     if request.method == 'POST':
         motivo = request.form['motivo_receita']
@@ -297,12 +332,12 @@ def editar_receita(id):
         con.commit()
         cursor.close()
         flash("Receita atualizada com sucesso!", "success")
-        return redirect('/')
+        return redirect('/home')
 
     cursor.close()
 
     cursor = con.cursor()
-    cursor.execute("select id_receita, motivo, valor, data_receita from receitas")
+    cursor.execute("select id_receita, motivo, valor, data_receita from receitas where id_user = ?", (id_user,))
     receitas = cursor.fetchall()
     cursor.close()
 
@@ -311,15 +346,17 @@ def editar_receita(id):
 
 @app.route('/editar_despesa/<int:id>', methods=['GET', 'POST'])
 def editar_despesa(id):
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
     cursor = con.cursor()
-
-    cursor.execute("SELECT ID_DESPESA, MOTIVO, VALOR, DATA_DESPESA FROM DESPESAS WHERE ID_DESPESA = ?", (id,))
+    cursor.execute("SELECT ID_DESPESA, MOTIVO, VALOR, DATA_DESPESA FROM DESPESAS WHERE ID_DESPESA = ? ", (id,))
     despesa = cursor.fetchone()
 
     if not despesa:
         cursor.close()
         flash("Despesa não encontrada!", "error")
-        return redirect('/')
+        return redirect('/home')
 
     if request.method == 'POST':
         motivo = request.form['motivo_despesa']
@@ -331,20 +368,22 @@ def editar_despesa(id):
         con.commit()
         cursor.close()
         flash("Despesa atualizada com sucesso!", "success")
-        return redirect('/')
+        return redirect('/home')
 
     cursor.close()
 
     cursor = con.cursor()
-    cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas")
+    cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas where id_user = ?", (id_user,))
     despesas = cursor.fetchall()
     cursor.close()
 
     return render_template('editar_despesa.html', despesa=despesa, despesas=despesas)
 
 
-@app.route('/deletar_receita/<int:id>', methods=('POST',))
+@app.route('/deletar_receita/<int:id>', methods=('POST', 'GET'))
 def deletar_receita(id):
+    if session.get('id_user') == '':
+        return redirect('/')
     cursor = con.cursor()
 
     try:
@@ -357,11 +396,13 @@ def deletar_receita(id):
     finally:
         cursor.close()
 
-    return redirect('/')
+    return redirect('/home')
 
 
-@app.route('/deletar_despesa/<int:id>', methods=('POST',))
+@app.route('/deletar_despesa/<int:id>', methods=('POST', 'GET'))
 def deletar_despesa(id):
+    if session.get('id_user') == '':
+        return redirect('/')
     cursor = con.cursor()
 
     try:
@@ -374,8 +415,15 @@ def deletar_despesa(id):
     finally:
         cursor.close()
 
-    return redirect('/')
+    return redirect('/home')
 
+@app.route('/sair')
+def sair():
+    session['id_user'] = ''
+    session['email'] = ''
+    session['senha'] = ''
+    flash("Saida realizada com sucesso", "success")
+    return redirect('/')
 
 def validar_cpf(cpf: str) -> bool:
     cpf = cpf.replace(".", "").replace("-", "").replace(" ", "")
