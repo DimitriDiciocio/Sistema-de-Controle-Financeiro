@@ -10,10 +10,8 @@ host = 'localhost'
 pasta_atual = os.path.dirname(__file__)
 database = os.path.join(pasta_atual, 'banco.fdb')
 
-print(database)
-
 user = 'SYSDBA'
-password = 'sysdba'
+password = 'masterkey'
 
 con = fdb.connect(host=host, database=database, user=user, password=password)
 
@@ -46,9 +44,69 @@ class Receitas:
         self.id_user = id_user
 
 
-@app.route('/home', methods=['GET'])
+@app.route('/')
 def index():
+    return render_template('index.html')
 
+
+@app.route('/dicas1', methods=['GET'])
+def dicas1():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
+    cursor = con.cursor()
+    cursor.execute('SELECT ID_USER, NOME FROM USERS')
+    users = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
+    cursor.close()
+    return render_template('dicas1.html', users=users, perfis=perfis)
+
+
+@app.route('/dicas2')
+def dicas2():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
+    cursor = con.cursor()
+    cursor.execute('SELECT ID_USER, NOME FROM USERS')
+    users = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
+    cursor.close()
+    return render_template('dicas2.html', users=users, perfis=perfis)
+
+
+@app.route('/dicas3')
+def dicas3():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
+    cursor = con.cursor()
+    cursor.execute('SELECT ID_USER, NOME FROM USERS')
+    users = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
+    cursor.close()
+    return render_template('dicas3.html', users=users, perfis=perfis)
+
+
+@app.route('/dicas4')
+def dicas4():
+    if session.get('id_user') == '':
+        return redirect('/')
+    id_user = session.get('id_user')
+    cursor = con.cursor()
+    cursor.execute('SELECT ID_USER, NOME FROM USERS')
+    users = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
+    cursor.close()
+    return render_template('dicas4.html', users=users, perfis=perfis)
+
+
+@app.route('/home', methods=['GET'])
+def home():
     if session.get('id_user') == '':
         return redirect('/')
     id_user = session.get('id_user')
@@ -59,6 +117,8 @@ def index():
     receitas = cursor.fetchall()
     cursor.execute('SELECT ID_DESPESA, MOTIVO, VALOR, DATA_DESPESA FROM DESPESAS where id_user = ?', (id_user,))
     despesas = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
     cursor.close()
     total = 0
     for receita in receitas:
@@ -66,9 +126,7 @@ def index():
     for despesa in despesas:
         total -= despesa[2]
 
-
-
-    return render_template('home.html', users=users, receitas=receitas, despesas=despesas, total=total)
+    return render_template('home.html', users=users, receitas=receitas, despesas=despesas, total=total, perfis=perfis)
 
 
 @app.route('/cadastro')
@@ -111,10 +169,10 @@ def cadastrar():
             print(f"Erro ao fechar o cursor: {e}")
 
     flash("Usuário cadastrado com sucesso!", "success")
-    return redirect('/')
+    return redirect('/home')
 
 
-@app.route('/')
+@app.route('/login')
 def login():
     return render_template('login.html')
 
@@ -149,24 +207,6 @@ def logar():
     return redirect('/home')
 
 
-@app.route('/perfil', methods=['GET'])
-def perfil():
-    if session.get('id_user') == '':
-        return redirect('/')
-    email = session.get('email')
-
-    cursor = con.cursor()
-
-    try:
-        cursor.execute('select id_user, nome, cpf, nascimento, email, senha from users where email = ?', (email,))
-        user = cursor.fetchone()
-    finally:
-        if cursor:
-            cursor.close()
-
-    return render_template('perfil.html', user=user)
-
-
 @app.route('/editar_usuario', methods=['POST', 'GET'])
 def editar_usuario():
     if session.get('id_user') == '':
@@ -187,13 +227,9 @@ def editar_usuario():
         senha = request.form['senha']
         senhaAntiga = request.form['senhaAntiga']
 
-
         if senhaAntiga == senhaCorreta:
             id_user = user[0]
 
-            if not validar_cpf(cpf):
-                flash("Erro: CPF inválido. Insira um CPF válido.", "error")
-                return redirect(url_for('editar_usuario'))
 
             cursor.execute("UPDATE users SET nome = ?, cpf = ?, nascimento = ?, email = ?, senha = ? WHERE id_user = ?",
                            (nome, cpf, nascimento, email, senha, id_user))
@@ -268,8 +304,10 @@ def nova_receita():
     cursor = con.cursor()
     cursor.execute("select id_receita, motivo, valor, data_receita from receitas where id_user = ?", (id_user,))
     receitas = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
     cursor.close()
-    return render_template('nova_receita.html', receitas=receitas)
+    return render_template('nova_receita.html', receitas=receitas, perfis=perfis)
 
 
 @app.route('/nova_despesa', methods=['GET'])
@@ -280,8 +318,10 @@ def nova_despesa():
     cursor = con.cursor()
     cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas where id_user = ?", (id_user,))
     despesas = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
     cursor.close()
-    return render_template('nova_despesa.html', despesas=despesas)
+    return render_template('nova_despesa.html', despesas=despesas, perfis=perfis)
 
 
 @app.route('/atualizar_receita', methods=['GET'])
@@ -292,8 +332,10 @@ def atualizar_receita():
     cursor = con.cursor()
     cursor.execute("select id_receita, motivo, valor, data_receita from receitas where id_user = ?", (id_user,))
     receitas = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
     cursor.close()
-    return render_template('editar_receita.html', receitas=receitas)
+    return render_template('editar_receita.html', receitas=receitas, perfis=perfis)
 
 
 @app.route('/atualizar_despesa')
@@ -304,8 +346,10 @@ def atualizar_despesa():
     cursor = con.cursor()
     cursor.execute("select id_despesa, motivo, valor, data_despesa from despesas where id_user = ?", (id_user,))
     despesas = cursor.fetchall()
+    cursor.execute('SELECT ID_USER, NOME, CPF, NASCIMENTO, EMAIL, SENHA FROM USERS WHERE ID_USER = ?', (id_user,))
+    perfis = cursor.fetchall()
     cursor.close()
-    return render_template('editar_despesa.html', despesas=despesas)
+    return render_template('editar_despesa.html', despesas=despesas, perfis=perfis)
 
 
 @app.route('/editar_receita/<int:id>', methods=['GET', 'POST'])
@@ -417,6 +461,7 @@ def deletar_despesa(id):
 
     return redirect('/home')
 
+
 @app.route('/sair')
 def sair():
     session['id_user'] = ''
@@ -424,6 +469,7 @@ def sair():
     session['senha'] = ''
     flash("Saida realizada com sucesso", "success")
     return redirect('/')
+
 
 def validar_cpf(cpf: str) -> bool:
     cpf = cpf.replace(".", "").replace("-", "").replace(" ", "")

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicas</title>
+    <link rel="stylesheet" href="../static/css/estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="cabecalho d-flex">
+        <div class="d-evelin">
+            <img class="logo" src="../static/img/logo.png">
+            <div>
+                <p class="letrao texto-logo">Finança</p>
+                <p class="letrao texto-logo">Facil</p>
+            </div>
+        </div>
+        <div class="d-flex caminhos">
+            <a href="/home"><div class="caminho-verde">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Home</p>
+            </div></a>
+
+            <a href="/nova_receita"><div class="caminho-amarelo">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Receitas</p>
+            </div></a>
+
+            <a href="/nova_despesa"><div class="caminho-vermelho">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Despesas</p>
+            </div></a>
+        </div>
+
+        <div>
+            <img class="usuario" id="toggleUser" src="../static/img/usuario.png">
+        </div>
+    </header>
+
+    <div class="escuro oculto">    <!-- Dimitri e Tharic, se vcs quiserem ver essa parte, vcs devem clicar no icone do usuario.  -->
+        <div class="mais oculto">  <!-- Dimitri, essa parte é o "perfil" do seu documento, então tudo que está no arquivo "perfil" deve vir para cá -->
+            <div class="d-flex">
+                <div class="espaco"></div>
+                {% for perfil in perfis %}
+                <p class="letrao">{{ perfil[1] }}</p>
+                <img class="usuario lado" src="../static/img/usuario.png">
+            </div>
+            <div class="informacoes">
+
+                <div>
+                    <p class="letrao">Data de Nascimento</p>
+                    <p class="letrinha">{{ perfil[3] }}</p>
+                </div><br>
+
+                <div>
+                    <p class="letrao">Email</p>
+                    <p class="letrinha">{{ perfil[4] }}</p>
+                </div><br>
+
+                <div>
+                    <p class="letrao">CPF</p>
+                    <p class="letrinha">{{ perfil[2] }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-evelin">
+                <a href="/editar_usuario"><button class="botton letrao">Editar</button></a>
+                <a href="/sair"><button class="botton letrao">Sair da conta</button></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Seleciona os elementos
+        const userIcon = document.getElementById("toggleUser");
+        const escuro = document.querySelector(".escuro");
+        const mais = document.querySelector(".mais");
+
+        // Mostra ou oculta as divs ao clicar no ícone do usuário
+        userIcon.addEventListener("click", function () {
+            escuro.classList.toggle("oculto");
+            mais.classList.toggle("oculto");
+        });
+
+        // Esconde as divs ao clicar na div "escuro"
+        escuro.addEventListener("click", function () {
+            if (!escuro.classList.contains("oculto")) {
+                escuro.classList.add("oculto");
+                mais.classList.add("oculto");
+            }
+        });
+    </script>
+
+    <section>
+        <div class="fundo-liso3 d-flex">
+            <img class="pensando3 relativo" src="../static/img/dica3.png">
+            <p class="titulo3 letrao">Separando dinheiro para realizações pessoais</p>
+        </div>
+
+    </section>
+
+    <section class="texto-grande">
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+        
+        <p class="titulo letrao">A Teoria por Trás de Separar Dinheiro para Realizações Pessoais</p>
+        <div class="mini-espaco"></div>
+        <p class="texto letrinha">
+            Separar dinheiro para realizações pessoais significa reservar uma quantia específica para investir em seus sonhos, 
+            sejam eles adquirir algo de grande valor, fazer uma viagem dos sonhos, investir em educação ou até começar um projeto 
+            pessoal importante. Essa prática é uma forma de dar prioridade às suas aspirações e garantir que, ao longo do tempo, 
+            você tenha recursos disponíveis para realizar o que é importante para você. Ao separar esse dinheiro, você se compromete a 
+            alcançar suas metas, de maneira planejada e com disciplina financeira.
+        </p>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">Transformando a Teoria em Prática</p>
+        <div class="mini-espaco"></div>
+        <p class="texto letrinha">
+            Para colocar essa prática em ação, é necessário entender o que você realmente deseja conquistar e quanto isso vai custar. 
+            Seja claro e específico com suas metas e defina um prazo para alcançá-las. Com isso, você poderá calcular o quanto precisa 
+            reservar regularmente para atingir sua realização pessoal. Separar dinheiro de forma consciente e planejada torna a busca por
+             seus objetivos mais estruturada e menos impulsiva.
+        </p>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">Como Separar Dinheiro para Realizações Pessoais</p>
+        <div class="mini-espaco"></div>
+        <ul>
+            <li class="texto letrinha">
+                Defina suas realizações pessoais: Faça uma lista de seus desejos ou metas. Pode ser uma viagem, um curso de especialização, 
+                abrir um negócio próprio ou comprar algo significativo. A chave aqui é ser específico e claro sobre o que você quer alcançar.
+            </li>
+
+            <li class="texto letrinha">
+                Calcule o valor necessário para cada realização: Após definir sua meta, pesquise ou estime o custo total de sua realização. 
+                Por exemplo, se você quer fazer uma viagem internacional, calcule os custos de passagem, hospedagem, alimentação e outros gastos.
+            </li>
+
+            <li class="texto letrinha">
+                Estabeleça um prazo para atingir a meta: Determine em quanto tempo você quer alcançar sua realização. Isso ajudará a calcular 
+                quanto você precisará economizar por mês para atingir o valor necessário dentro do prazo desejado.
+            </li>
+
+            <li class="texto letrinha">
+                Separe uma porcentagem da sua renda: Determine uma quantia fixa ou uma porcentagem da sua renda mensal que será direcionada 
+                exclusivamente para as suas realizações. É importante tratar esse valor como uma despesa essencial, igual a pagar contas ou 
+                fazer compras de necessidade básica.
+            </li>
+
+            <li class="texto letrinha">
+                Automatize o processo de separação: Se possível, programe uma transferência automática para uma conta separada logo após o 
+                recebimento de sua renda. Isso ajuda a evitar a tentação de gastar o dinheiro antes de atingir seu objetivo.
+            </li>
+        </ul>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">O Que Você Consegue ao Separar Dinheiro para Realizações Pessoais?</p>
+        <div class="mini-espaco"></div>
+        <p class="texto letrinha">
+            Ao separar dinheiro para realizações pessoais, você cria um espaço financeiro dedicado aos seus sonhos e projetos. 
+            Com isso, você consegue:
+        </p>
+        <ol>
+            <li class="texto letrinha">
+                Manter o foco nos seus objetivos, sem distrações financeiras.
+            </li>
+
+            <li class="texto letrinha">
+                Evitar usar o dinheiro para outras despesas não planejadas.
+            </li>
+
+            <li class="texto letrinha">
+                Criar um planejamento mais sólido e realista para alcançar suas metas.
+            </li>
+
+            <li class="texto letrinha">
+                Ter uma sensação de controle sobre sua vida financeira, com o compromisso de investir no que é importante para você.
+            </li>
+        </ol>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">Dicas Extras para Separar Dinheiro para Realizações Pessoais</p>
+        <div class="mini-espaco"></div>
+        <ol>
+            <li class="texto letrinha">
+                Crie um fundo separado para suas realizações: Tenha uma conta poupança ou uma conta separada para o dinheiro 
+                que você está economizando para seus objetivos. Isso ajuda a manter o foco e a evitar o uso inadvertido do dinheiro.
+            </li>
+
+            <li class="texto letrinha">
+                Quebre grandes metas em etapas menores: Se a sua realização é um objetivo grande, divida-o em etapas menores. 
+                Por exemplo, se deseja abrir um negócio, comece com o objetivo de juntar uma quantia inicial para os custos de 
+                registro e infraestrutura.
+            </li>
+
+            <li class="texto letrinha">
+                Revise suas metas periodicamente: Ao longo do tempo, suas prioridades podem mudar. Revise seus objetivos periodicamente 
+                para garantir que está no caminho certo e para ajustar o valor que está sendo reservado, se necessário.
+            </li>
+
+            <li class="texto letrinha">
+                Celebre conquistas intermediárias: Se você atingir uma etapa importante dentro da sua meta, celebre! Isso mantém a motivação 
+                e te faz perceber o progresso ao longo do caminho.
+            </li>
+        </ol>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="texto letrinha">
+            Separar dinheiro para suas realizações pessoais é uma maneira poderosa de manter o foco nos seus sonhos e garantir que, ao longo 
+            do tempo, você possa conquistar o que deseja. Com organização e disciplina, você consegue transformar seus objetivos em realidade, 
+            sem comprometer sua saúde financeira.
+        </p>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+    </section>
+
+</body>
+</html>

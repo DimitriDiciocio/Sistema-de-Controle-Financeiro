@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicas</title>
+    <link rel="stylesheet" href="../static/css/estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="cabecalho d-flex">
+        <div class="d-evelin">
+            <img class="logo" src="../static/img/logo.png">
+            <div>
+                <p class="letrao texto-logo">Finança</p>
+                <p class="letrao texto-logo">Facil</p>
+            </div>
+        </div>
+        <div class="d-flex caminhos">
+            <a href="/home"><div class="caminho-verde">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Home</p>
+            </div></a>
+            
+            <a href="/receitas"><div class="caminho-amarelo">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Receitas</p>
+            </div></a>
+            
+            <a href="/despesas"><div class="caminho-vermelho">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Despesas</p>
+            </div></a>
+        </div>
+
+        <div>
+            <img class="usuario" id="toggleUser" src="../static/img/usuario.png">
+        </div>
+    </header>
+
+    <div class="escuro oculto">    <!-- Dimitri e Tharic, se vcs quiserem ver essa parte, vcs devem clicar no icone do usuario.  -->
+        <div class="mais oculto">  <!-- Dimitri, essa parte é o "perfil" do seu documento, então tudo que está no arquivo "perfil" deve vir para cá -->
+            <div class="d-flex">
+                <div class="espaco"></div>
+                {% for perfil in perfis %}
+                <p class="letrao">{{ perfil[1] }}</p>
+                <img class="usuario lado" src="../static/img/usuario.png">
+            </div>
+            <div class="informacoes">
+
+                <div>
+                    <p class="letrao">Data de Nascimento</p>
+                    <p class="letrinha">{{ perfil[3] }}</p>
+                </div><br>
+
+                <div>
+                    <p class="letrao">Email</p>
+                    <p class="letrinha">{{ perfil[4] }}</p>
+                </div><br>
+
+                <div>
+                    <p class="letrao">CPF</p>
+                    <p class="letrinha">{{ perfil[2] }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-evelin">
+                <a href="/editar_usuario"><button class="botton letrao">Editar</button></a>
+                <a href="/sair"><button class="botton letrao">Sair da conta</button></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Seleciona os elementos
+        const userIcon = document.getElementById("toggleUser");
+        const escuro = document.querySelector(".escuro");
+        const mais = document.querySelector(".mais");
+
+        // Mostra ou oculta as divs ao clicar no ícone do usuário
+        userIcon.addEventListener("click", function () {
+            escuro.classList.toggle("oculto");
+            mais.classList.toggle("oculto");
+        });
+
+        // Esconde as divs ao clicar na div "escuro"
+        escuro.addEventListener("click", function () {
+            if (!escuro.classList.contains("oculto")) {
+                escuro.classList.add("oculto");
+                mais.classList.add("oculto");
+            }
+        });
+    </script>
+
+    <section>
+        <div class="fundo-liso1 d-flex">
+            <img class="pensando1 relativo" src="../static/img/dica1.png">
+            <p class="titulo1 letrao">Como estabelecer Limites Semanais de Gasto?</p>
+        </div>
+
+    </section>
+
+    <section class="texto-grande">
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+        
+        <p class="titulo letrao">A Teoria por Trás do Fundo de Objetivos</p>
+        <div class="mini-espaco"></div>
+        <p class="texto letrinha">
+            O fundo de objetivos é um método de organização financeira que consiste em poupar dinheiro com um propósito específico em mente, 
+            seja comprar algo que você deseja, investir em um curso ou realizar uma viagem. Diferente de uma poupança genérica, o fundo de 
+            objetivos é focado em uma meta clara, ajudando você a economizar de forma direcionada e motivadora. Ter uma meta definida mantém 
+            você comprometido com o plano e torna a experiência de poupar mais gratificante.
+        </p>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">Transformando a Teoria em Prática</p>
+        <div class="mini-espaco"></div>
+        <p class="texto letrinha">
+            Criar e manter um fundo de objetivos exige organização e um plano de ação. Para começar, defina exatamente o que quer conquistar 
+            e quanto isso vai custar. Em seguida, estabeleça um prazo para alcançar a meta, o que te ajuda a calcular quanto precisa poupar 
+            a cada mês ou semana. Com esse fundo, você sabe exatamente onde quer chegar e consegue visualizar o progresso ao longo do caminho.
+        </p>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">Como Alcançar um Fundo de Objetivos</p>
+        <div class="mini-espaco"></div>
+        <ul>
+            <li class="texto letrinha">
+                Defina seu objetivo: Seja claro sobre o que você quer alcançar. Exemplo: um novo celular, uma viagem, um curso. Anote o valor 
+                necessário para concretizar esse plano.
+            </li>
+
+            <li class="texto letrinha">
+                Estabeleça um prazo: Quanto tempo você tem para juntar o valor? Quanto mais claro for o prazo, mais fácil será definir a 
+                quantia exata que precisa poupar periodicamente para atingir a meta.
+            </li>
+
+            <li class="texto letrinha">
+                Calcule o valor a ser economizado: Divida o valor do objetivo pelo prazo escolhido. Por exemplo, se seu objetivo custa 
+                R$ 1.200 e você quer alcançá-lo em 6 meses, precisará poupar R$ 200 por mês.
+            </li>
+
+            <li class="texto letrinha">
+                Separe o valor regularmente: Assim que receber sua mesada ou salário, reserve a quantia destinada ao fundo antes de 
+                gastar com outras coisas. Isso evita que você acabe usando o dinheiro para outras finalidades.
+            </li>
+
+            <li class="texto letrinha">
+                Acompanhe o progresso: Crie uma tabela ou use um aplicativo de finanças para acompanhar o quanto já guardou. Isso 
+                ajuda a manter o foco e te motiva a continuar poupando.
+            </li>
+        </ul>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">O Que Você Consegue ao Criar um Fundo de Objetivos?</p>
+        <div class="mini-espaco"></div>
+        <p class="texto letrinha">
+            Com um fundo de objetivos, você conquista mais disciplina financeira e tem uma recompensa garantida ao final do processo. Além disso, você:
+        </p>
+        <ol>
+            <li class="texto letrinha">
+                Evita endividamentos, pois não precisa recorrer a crédito para comprar ou investir no que deseja.
+            </li>
+
+            <li class="texto letrinha">
+                Aprende a priorizar o que realmente importa, evitando gastos com coisas que não contribuem para sua meta.
+            </li>
+
+            <li class="texto letrinha">
+                Conquista algo desejado de forma planejada e com menos impacto no orçamento.
+            </li>
+
+            <li class="texto letrinha">
+                TCria o hábito de poupar e desenvolve uma visão financeira mais organizada.
+            </li>
+        </ol>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="titulo letrao">Dicas Extras para Manter o Fundo de Objetivos</p>
+        <div class="mini-espaco"></div>
+        <ol>
+            <li class="texto letrinha">
+                Crie metas pequenas dentro da meta maior: Se sua meta é alta, divida-a em partes. Isso te ajuda a manter a 
+                motivação ao atingir cada pequeno marco.
+            </li>
+
+            <li class="texto letrinha">
+                Evite mexer no fundo para outras coisas: O valor separado deve ser intocável. Se possível, crie uma conta 
+                separada ou use uma poupança para mantê-lo longe do dinheiro de uso diário.
+            </li>
+
+            <li class="texto letrinha">
+                Use recompensas: Se atinge metas intermediárias, se dê um pequeno presente (dentro do orçamento) 
+                para celebrar o progresso.
+            </li>
+
+            <li class="texto letrinha">
+                Revise o plano regularmente: Se perceber que o valor necessário mudou ou que é preciso ajustar a quantia poupada, 
+                revise o plano para que ele continue funcional.
+            </li>
+        </ol>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+
+        <p class="texto letrinha">
+            Criar um fundo de objetivos é uma ótima forma de alcançar suas metas com menos estresse e mais clareza. Com organização e 
+            persistência, você estará cada vez mais perto de realizar seus sonhos sem comprometer seu orçamento!
+        </p>
+
+        <div class="mini-espaco"></div>
+        <div class="mini-espaco"></div>
+    </section>
+</body>
+</html>

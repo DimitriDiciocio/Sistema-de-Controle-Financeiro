@@ -3,87 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receitas</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <title>Despesas</title>
+    <link rel="stylesheet" href="../static/css/estilo.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 </head>
-<body class="fundo img_fundo_1">
+<body>
     <header class="cabecalho d-flex">
-        <div>
+        <div class="d-evelin">
             <img class="logo" src="../static/img/logo.png">
+            <div>
+                <p class="letrao texto-logo">Finança</p>
+                <p class="letrao texto-logo">Facil</p>
+            </div>
         </div>
         <div class="d-flex caminhos">
-            <a href="/"><p class="caminho">Home</p></a>
-            <div class="divisao"></div>
-            <a href="/nova_receita"><p class="caminho">Receitas</p></a>
-            <div class="divisao"></div>
-            <a href="/nova_despesa"><p class="caminho">Despesas</p></a>
+            <a href="/home"><div class="caminho-verde">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Home</p>
+            </div></a>
+
+            <a href="/nova_receita"><div class="caminho-amarelo">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Receitas</p>
+            </div></a>
+
+            <a href="/nova_despesa"><div class="caminho-vermelho">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <p class="texto-cabecalho letrao">Despesas</p>
+            </div></a>
         </div>
 
         <div>
-            <a href="/login"><img class="usuario" src="../static/img/usuario.png"></a>
+            <img class="usuario" id="toggleUser" src="../static/img/usuario.png">
         </div>
     </header>
 
+    <div class="escuro oculto">    <!-- Dimitri e Tharic, se vcs quiserem ver essa parte, vcs devem clicar no icone do usuario.  -->
+        <div class="mais oculto">  <!-- Dimitri, essa parte é o "perfil" do seu documento, então tudo que está no arquivo "perfil" deve vir para cá -->
+            <div class="d-flex">
+                <div class="espaco"></div>
+                {% for perfil in perfis %}
+                <p class="letrao">{{ perfil[1] }}</p>
+                <img class="usuario lado" src="../static/img/usuario.png">
+            </div>
+            <div class="informacoes">
+
+                <div>
+                    <p class="letrao">Data de Nascimento</p>
+                    <p class="letrinha">{{ perfil[3] }}</p>
+                </div><br>
+
+                <div>
+                    <p class="letrao">Email</p>
+                    <p class="letrinha">{{ perfil[4] }}</p>
+                </div><br>
+
+                <div>
+                    <p class="letrao">CPF</p>
+                    <p class="letrinha">{{ perfil[2] }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-evelin">
+                <a href="/editar_usuario"><button class="botton letrao">Editar</button></a>
+                <a href="/sair"><button class="botton letrao">Sair da conta</button></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Seleciona os elementos
+        const userIcon = document.getElementById("toggleUser");
+        const escuro = document.querySelector(".escuro");
+        const mais = document.querySelector(".mais");
+
+        // Mostra ou oculta as divs ao clicar no ícone do usuário
+        userIcon.addEventListener("click", function () {
+            escuro.classList.toggle("oculto");
+            mais.classList.toggle("oculto");
+        });
+
+        // Esconde as divs ao clicar na div "escuro"
+        escuro.addEventListener("click", function () {
+            if (!escuro.classList.contains("oculto")) {
+                escuro.classList.add("oculto");
+                mais.classList.add("oculto");
+            }
+        });
+    </script>
+
     <div class="espaco"></div>
+    <div class="mini-espaco"></div>
 
-    <section class="">
+    <section class="position-ab" id="c-to-l">
 
-        <div class="adicionar">
-            <div class="mini-espaco"></div>
-            <p class="texto_quadro">ADICIONE UMA RECEITA</p>
-            <div class="mini-espaco"></div>
-            <form action="{{ url_for('criar_receita') }}" method="post">
-                <label class="info" for="valor_receita">Valor:</label>
-                <input type="number" class="inputo1" id="valor_receita" name="valor_receita" placeholder="  10.00" required> <br>
-
+        <form class="d-flex" action="{{ url_for('criar_receita') }}" method="post">
+            <div class="azul" id="tabelaazul">
+                <div class="mini-espaco"></div>
+                <div class="mini-espaco"></div>
+                <label class="info">Valor: </label>
+                <label class="info">Fonte: </label>
+                <label class="info">Data: </label>
+            </div>
+            <div class="adicionar" id="tabela">
+                <div class="mini-espaco"></div>
+                <p class="texto_quadro letrinha" id="texto-quadro">ADICIONE SUA RECEITA</p>
+                <div class="mini-espaco"></div>
+                
+                <input type="number" class="inputo"  id="input" name="valor_receita" placeholder="  10.99"> <br>
                 <div class="mini-espaco"></div>
 
-                <label class="info" for="motivo_receita">Fonte:</label>
-                <input type="text" class="inputo2" id="motivo_receita" name="motivo_receita" placeholder="  Roubei a véia da esquina" required> <br>
-
+                <input type="text" class="inputo"  id="input2" name="motivo_receita" placeholder="  Venda de droga"> <br>
                 <div class="mini-espaco"></div>
-
-                <label class="info" for="data_receita">Data:</label>
-                <input type="date" class="inputo3" id="data_receita" name="data_receita" required> <br>
-
+    
+                <input type="date" class="inputo"  id="input3" name="data_receita"><br>
                 <div class="mini-espaco"></div>
-
-                <button type="submit" class="botao">Adicionar</button>
-            </form>
-        </div>
+    
+                <button type="submit" class="botao margin1" id="adicionar">Adicionar</button>
+                <button type="button" class="botao margin2" onclick="mostrarHistorico()">Ver Histórico</button>
+                
+            </div>
+        </form>
     </section>
 
-    <section >
-        <div class="grafico">
-            <p>HISTORICO</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Motivo</th>
-                        <th>Valor</th>
-                        <th>Data</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for receita in receitas %}
-                    <tr>
-                        <td>{{ receita[0] }}</td>
-                        <td>{{ receita[1] }}</td>
-                        <td>{{ receita[2] }}</td>
-                        <td>{{ receita[3] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <section>
+        <div id="historico">
+            <div class="azul_grafico" id="topo_azul">
+                <div class="d-flex espaco_esquerda">
+                    <p class="info2">Dia</p>
+                    <div class="divisao2"></div>
+                    <p class="info2">Valor</p>
+                    <div class="divisao2"></div>
+                    <p class="info2">Fonte</p>
+                    <button class="xis" id="exit" onclick="fecharHistorico()">X</button>
+                </div>
+            </div>
+            <div class="grafico" id="baixo_branco">
+                {% for receita in receitas %}
+                <div class="dado d-flex">
+                    <div class="subquadro1 centraliza">
+                        <p>{{ receita[3] }}</p>
+                    </div>
+                    <div class="subquadro2 centraliza">
+                        <p>{{ receita[2] }}</p>
+                    </div>
+                    <div class="subquadro1 centraliza">
+                        <p>{{ receita[1] }}</p>
+                    </div>
+                    <div class="subquadro2 centraliza">
+                        <button class="editar"><img class="lapis" src="../static/img/editar.png"></button>
+                        <button class="deletar"><img class="lixeira" src="../static/img/deletar.png"></button>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+
         </div>
-    </section>
+    </section> 
 
-    <footer class="rodape">
 
-    </footer>
+    <!-- Importando o arquivo JavaScript -->
+    <script src="../static/js/codigo.js"></script>
 </body>
 </html>
